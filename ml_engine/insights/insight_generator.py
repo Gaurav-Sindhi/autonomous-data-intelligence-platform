@@ -1,13 +1,20 @@
 def generate_basic_insights(df):
 
-    insights = []
+    insights = {
 
-    insights.append(f"Dataset contains {df.shape[0]} rows")
+        "rows": int(df.shape[0]),
 
-    insights.append(f"Dataset contains {df.shape[1]} columns")
+        "columns": int(df.shape[1]),
 
-    missing = df.isnull().sum().sum()
+        "missing_values":
+            int(df.isnull().sum().sum()),
 
-    insights.append(f"Missing values detected: {missing}")
+        "duplicate_rows":
+            int(df.duplicated().sum()),
+
+        "column_names":
+            list(df.columns)
+
+    }
 
     return insights

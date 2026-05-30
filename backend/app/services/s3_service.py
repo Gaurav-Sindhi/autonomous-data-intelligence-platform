@@ -3,7 +3,7 @@ import uuid
 
 s3 = boto3.client("s3")
 
-BUCKET_NAME = "adi-platform-datasets"
+BUCKET_NAME = "adi-platform-dataset"
 
 def upload_file_to_s3(file):
     file_id = str(uuid.uuid4())
