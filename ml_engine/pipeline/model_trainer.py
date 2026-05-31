@@ -1,6 +1,7 @@
 import os
 import joblib
 import pandas as pd
+import json
 
 from sklearn.model_selection import train_test_split
 
@@ -89,6 +90,21 @@ def train_models(df, target_column, problem_type):
     model_path = f"ml_engine/models/{best_model_name}.pkl"
 
     joblib.dump(best_model, model_path)
+
+    metadata = {
+    "target_column": target_column,
+    "feature_columns": list(X.columns),
+    "problem_type": problem_type,
+    "best_model": best_model_name,
+    "model_path": model_path
+}
+
+    with open(
+    "ml_engine/models/model_metadata.json",
+    "w"
+    ) as f:
+
+        json.dump(metadata, f, indent=4)
 
     return {
         "scores": results,

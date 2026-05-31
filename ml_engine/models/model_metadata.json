@@ -1,0 +1,10 @@
+{
+    "target_column": "salary",
+    "feature_columns": [
+        "age",
+        "experience"
+    ],
+    "problem_type": "regression",
+    "best_model": "Linear Regression",
+    "model_path": "ml_engine/models/Linear Regression.pkl"
+}
