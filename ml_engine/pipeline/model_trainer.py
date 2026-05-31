@@ -1,3 +1,5 @@
+import os
+import joblib
 import pandas as pd
 
 from sklearn.model_selection import train_test_split
@@ -19,7 +21,6 @@ def train_models(df, target_column, problem_type):
 
     y = df[target_column]
 
-    # Convert categorical columns
     X = pd.get_dummies(X)
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -30,6 +31,7 @@ def train_models(df, target_column, problem_type):
     )
 
     results = {}
+    trained_models = {}
 
     if problem_type == "classification":
 
@@ -51,6 +53,8 @@ def train_models(df, target_column, problem_type):
 
             results[name] = round(accuracy, 4)
 
+            trained_models[name] = model
+
     else:
 
         models = {
@@ -71,4 +75,23 @@ def train_models(df, target_column, problem_type):
 
             results[name] = round(score, 4)
 
-    return results
+            trained_models[name] = model
+
+    # Find best model
+    best_model_name = max(results, key=results.get)
+
+    best_model = trained_models[best_model_name]
+
+    # Create model directory
+    os.makedirs("ml_engine/models", exist_ok=True)
+
+    # Save model
+    model_path = f"ml_engine/models/{best_model_name}.pkl"
+
+    joblib.dump(best_model, model_path)
+
+    return {
+        "scores": results,
+        "best_model": best_model_name,
+        "model_path": model_path
+    }
