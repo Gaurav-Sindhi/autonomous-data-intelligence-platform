@@ -1,0 +1,32 @@
+[
+    {
+        "timestamp": "2026-06-03 16:17:07",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9735
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-03 16:18:51",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9703
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-03 17:25:25",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9725
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    }
+]

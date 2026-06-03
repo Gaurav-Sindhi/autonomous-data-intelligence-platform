@@ -2,6 +2,7 @@ import os
 import joblib
 import pandas as pd
 import json
+from datetime import datetime
 
 from sklearn.model_selection import train_test_split
 
@@ -37,11 +38,8 @@ def train_models(df, target_column, problem_type):
     if problem_type == "classification":
 
         models = {
-            "Logistic Regression":
-                LogisticRegression(max_iter=1000),
-
-            "Random Forest":
-                RandomForestClassifier()
+            "Logistic Regression": LogisticRegression(max_iter=1000),
+            "Random Forest": RandomForestClassifier()
         }
 
         for name, model in models.items():
@@ -59,11 +57,8 @@ def train_models(df, target_column, problem_type):
     else:
 
         models = {
-            "Linear Regression":
-                LinearRegression(),
-
-            "Random Forest":
-                RandomForestRegressor()
+            "Linear Regression": LinearRegression(),
+            "Random Forest": RandomForestRegressor()
         }
 
         for name, model in models.items():
@@ -78,33 +73,58 @@ def train_models(df, target_column, problem_type):
 
             trained_models[name] = model
 
-    # Find best model
+    # Best model
     best_model_name = max(results, key=results.get)
 
     best_model = trained_models[best_model_name]
 
-    # Create model directory
+    # Create folders
     os.makedirs("ml_engine/models", exist_ok=True)
+    os.makedirs("ml_engine/logs", exist_ok=True)
 
     # Save model
     model_path = f"ml_engine/models/{best_model_name}.pkl"
 
     joblib.dump(best_model, model_path)
 
+    # Save metadata
     metadata = {
-    "target_column": target_column,
-    "feature_columns": list(X.columns),
-    "problem_type": problem_type,
-    "best_model": best_model_name,
-    "model_path": model_path
-}
+        "target_column": target_column,
+        "feature_columns": list(X.columns),
+        "problem_type": problem_type,
+        "best_model": best_model_name,
+        "model_path": model_path
+    }
 
     with open(
-    "ml_engine/models/model_metadata.json",
-    "w"
+        "ml_engine/models/model_metadata.json",
+        "w"
     ) as f:
 
         json.dump(metadata, f, indent=4)
+
+    # Save training history
+    history_record = {
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "best_model": best_model_name,
+        "scores": results,
+        "problem_type": problem_type,
+        "target_column": target_column
+    }
+
+    history_file = "ml_engine/logs/training_history.json"
+
+    try:
+        with open(history_file, "r") as f:
+            history = json.load(f)
+
+    except:
+        history = []
+
+    history.append(history_record)
+
+    with open(history_file, "w") as f:
+        json.dump(history, f, indent=4)
 
     return {
         "scores": results,
