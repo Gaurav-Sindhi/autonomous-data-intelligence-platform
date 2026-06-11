@@ -1,7 +1,8 @@
 import os
+import json
 import joblib
 import pandas as pd
-import json
+
 from datetime import datetime
 
 from sklearn.model_selection import train_test_split
@@ -16,14 +17,26 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 
+# XGBoost
+from xgboost import XGBClassifier
+from xgboost import XGBRegressor
+
 
 def train_models(df, target_column, problem_type):
 
-    X = df.drop(columns=[target_column])
+    # ==========================
+    # Features & Target
+    # ==========================
 
+    X = df.drop(columns=[target_column])
     y = df[target_column]
 
+    # Convert categorical features
     X = pd.get_dummies(X)
+
+    # ==========================
+    # Train Test Split
+    # ==========================
 
     X_train, X_test, y_train, y_test = train_test_split(
         X,
@@ -35,11 +48,32 @@ def train_models(df, target_column, problem_type):
     results = {}
     trained_models = {}
 
+    # ==========================
+    # Classification Models
+    # ==========================
+
     if problem_type == "classification":
 
         models = {
-            "Logistic Regression": LogisticRegression(max_iter=1000),
-            "Random Forest": RandomForestClassifier()
+
+            "Logistic Regression":
+                LogisticRegression(
+                    max_iter=1000
+                ),
+
+            "Random Forest":
+                RandomForestClassifier(
+                    random_state=42
+                ),
+
+            "XGBoost":
+                XGBClassifier(
+                    n_estimators=100,
+                    learning_rate=0.1,
+                    max_depth=4,
+                    eval_metric="logloss",
+                    random_state=42
+                )
         }
 
         for name, model in models.items():
@@ -48,46 +82,100 @@ def train_models(df, target_column, problem_type):
 
             predictions = model.predict(X_test)
 
-            accuracy = accuracy_score(y_test, predictions)
-
-            results[name] = round(accuracy, 4)
-
-            trained_models[name] = model
-
-    else:
-
-        models = {
-            "Linear Regression": LinearRegression(),
-            "Random Forest": RandomForestRegressor()
-        }
-
-        for name, model in models.items():
-
-            model.fit(X_train, y_train)
-
-            predictions = model.predict(X_test)
-
-            score = r2_score(y_test, predictions)
+            score = accuracy_score(
+                y_test,
+                predictions
+            )
 
             results[name] = round(score, 4)
 
             trained_models[name] = model
 
-    # Best model
-    best_model_name = max(results, key=results.get)
+    # ==========================
+    # Regression Models
+    # ==========================
 
-    best_model = trained_models[best_model_name]
+    else:
 
-    # Create folders
-    os.makedirs("ml_engine/models", exist_ok=True)
-    os.makedirs("ml_engine/logs", exist_ok=True)
+        models = {
 
-    # Save model
-    model_path = f"ml_engine/models/{best_model_name}.pkl"
+            "Linear Regression":
+                LinearRegression(),
 
-    joblib.dump(best_model, model_path)
+            "Random Forest":
+                RandomForestRegressor(
+                    random_state=42
+                ),
 
-    # Save metadata
+            "XGBoost":
+                XGBRegressor(
+                    n_estimators=100,
+                    learning_rate=0.1,
+                    max_depth=4,
+                    random_state=42
+                )
+        }
+
+        for name, model in models.items():
+
+            model.fit(X_train, y_train)
+
+            predictions = model.predict(X_test)
+
+            score = r2_score(
+                y_test,
+                predictions
+            )
+
+            results[name] = round(score, 4)
+
+            trained_models[name] = model
+
+    # ==========================
+    # Best Model Selection
+    # ==========================
+
+    best_model_name = max(
+        results,
+        key=results.get
+    )
+
+    best_model = trained_models[
+        best_model_name
+    ]
+
+    # ==========================
+    # Create Directories
+    # ==========================
+
+    os.makedirs(
+        "ml_engine/models",
+        exist_ok=True
+    )
+
+    os.makedirs(
+        "ml_engine/logs",
+        exist_ok=True
+    )
+
+    # ==========================
+    # Save Best Model
+    # ==========================
+
+    model_path = (
+        f"ml_engine/models/"
+        f"{best_model_name}.pkl"
+    )
+
+    joblib.dump(
+        best_model,
+        model_path
+    )
+
+    # ==========================
+    # Save Metadata
+    # ==========================
+
     metadata = {
         "target_column": target_column,
         "feature_columns": list(X.columns),
@@ -101,30 +189,72 @@ def train_models(df, target_column, problem_type):
         "w"
     ) as f:
 
-        json.dump(metadata, f, indent=4)
+        json.dump(
+            metadata,
+            f,
+            indent=4
+        )
 
-    # Save training history
+    # ==========================
+    # Training History
+    # ==========================
+
     history_record = {
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "best_model": best_model_name,
-        "scores": results,
-        "problem_type": problem_type,
-        "target_column": target_column
+
+        "timestamp":
+            datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+
+        "best_model":
+            best_model_name,
+
+        "scores":
+            results,
+
+        "problem_type":
+            problem_type,
+
+        "target_column":
+            target_column
     }
 
-    history_file = "ml_engine/logs/training_history.json"
+    history_file = (
+        "ml_engine/logs/"
+        "training_history.json"
+    )
 
     try:
-        with open(history_file, "r") as f:
+
+        with open(
+            history_file,
+            "r"
+        ) as f:
+
             history = json.load(f)
 
     except:
+
         history = []
 
-    history.append(history_record)
+    history.append(
+        history_record
+    )
 
-    with open(history_file, "w") as f:
-        json.dump(history, f, indent=4)
+    with open(
+        history_file,
+        "w"
+    ) as f:
+
+        json.dump(
+            history,
+            f,
+            indent=4
+        )
+
+    # ==========================
+    # Return Results
+    # ==========================
 
     return {
         "scores": results,

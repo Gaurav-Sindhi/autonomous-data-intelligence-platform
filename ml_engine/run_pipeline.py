@@ -9,6 +9,10 @@ from ml_engine.agents.insight_agent import (
     generate_ai_insights
 )
 
+from ml_engine.agents.model_selection_agent import (
+    explain_model_choice
+)
+
 def run_pipeline(file_path):
 
     df = pd.read_csv(file_path)
@@ -27,6 +31,11 @@ def run_pipeline(file_path):
         problem_info["problem_type"]
     )
 
+    model_reasoning = explain_model_choice(
+    problem_info,
+    training_results
+)
+
     ai_insights = generate_ai_insights(
     insights,
     problem_info,
@@ -34,9 +43,10 @@ def run_pipeline(file_path):
 )
 
     return {
-    "insights": insights,
-    "problem_info": problem_info,
-    "training_results": training_results,
-    "charts": charts,
-    "ai_insights": ai_insights
-}
+        "insights": insights,
+        "problem_info": problem_info,
+        "training_results": training_results,
+        "charts": charts,
+        "ai_insights": ai_insights,
+        "model_reasoning": model_reasoning
+    }
