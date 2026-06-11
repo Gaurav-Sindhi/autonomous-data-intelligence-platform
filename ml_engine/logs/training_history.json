@@ -28,5 +28,115 @@
         },
         "problem_type": "regression",
         "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-06 17:22:52",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9704
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-06 17:35:12",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9718
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-10 19:23:41",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9712
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-10 19:41:50",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9736
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-10 19:47:50",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9764
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-10 19:48:12",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9711
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-10 19:51:12",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9757
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-10 19:52:01",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9752
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-10 20:04:38",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9745
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-10 20:06:45",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9756
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-10 20:08:07",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9733
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
     }
 ]

@@ -5,6 +5,9 @@ from ml_engine.insights.insight_generator import generate_basic_insights
 from ml_engine.pipeline.problem_detector import detect_problem_type
 from ml_engine.pipeline.model_trainer import train_models
 from ml_engine.visualization.chart_generator import generate_charts
+from ml_engine.agents.insight_agent import (
+    generate_ai_insights
+)
 
 def run_pipeline(file_path):
 
@@ -12,7 +15,7 @@ def run_pipeline(file_path):
 
     df = clean_data(df)
 
-    chart_paths = generate_charts(df)
+    charts = generate_charts(df)
 
     insights = generate_basic_insights(df)
 
@@ -24,9 +27,16 @@ def run_pipeline(file_path):
         problem_info["problem_type"]
     )
 
+    ai_insights = generate_ai_insights(
+    insights,
+    problem_info,
+    training_results
+)
+
     return {
     "insights": insights,
     "problem_info": problem_info,
     "training_results": training_results,
-    "charts": chart_paths
+    "charts": charts,
+    "ai_insights": ai_insights
 }
