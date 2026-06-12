@@ -1,29 +1,174 @@
 import os
 import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
 
 
-def generate_charts(df):
+def generate_charts(df, target_column):
 
-    os.makedirs("uploads/reports", exist_ok=True)
+    os.makedirs(
+        "uploads/reports",
+        exist_ok=True
+    )
 
     charts = []
 
-    numeric_columns = df.select_dtypes(include=["number"]).columns
+    # ==========================
+    # Correlation Heatmap
+    # ==========================
 
-    for col in numeric_columns:
+    numeric_df = df.select_dtypes(
+        include=["number"]
+    )
 
-        plt.figure(figsize=(6,4))
+    if len(numeric_df.columns) > 1:
 
-        df[col].hist()
+        plt.figure(figsize=(10, 8))
 
-        plt.title(col)
+        sns.heatmap(
+            numeric_df.corr(),
+            annot=True,
+            cmap="coolwarm"
+        )
 
-        chart_path = f"uploads/reports/{col}.png"
+        plt.title(
+            "Correlation Heatmap"
+        )
 
-        plt.savefig(chart_path)
+        heatmap_path = (
+            "uploads/reports/"
+            "heatmap.png"
+        )
+
+        plt.tight_layout()
+
+        plt.savefig(
+            heatmap_path
+        )
 
         plt.close()
 
-        charts.append(chart_path)
+        charts.append(
+            heatmap_path
+        )
+
+    # ==========================
+    # Missing Values Analysis
+    # ==========================
+
+    plt.figure(figsize=(8, 5))
+
+    missing_values = (
+        df.isnull().sum()
+    )
+
+    missing_values.plot(
+        kind="bar"
+    )
+
+    plt.title(
+        "Missing Values Analysis"
+    )
+
+    plt.ylabel(
+        "Count"
+    )
+
+    missing_path = (
+        "uploads/reports/"
+        "missing_values.png"
+    )
+
+    plt.tight_layout()
+
+    plt.savefig(
+        missing_path
+    )
+
+    plt.close()
+
+    charts.append(
+        missing_path
+    )
+
+    # ==========================
+    # Target Distribution
+    # ==========================
+
+    if target_column in df.columns:
+
+        plt.figure(figsize=(8, 5))
+
+        sns.histplot(
+            df[target_column],
+            kde=True
+        )
+
+        plt.title(
+            f"{target_column} Distribution"
+        )
+
+        distribution_path = (
+            "uploads/reports/"
+            "target_distribution.png"
+        )
+
+        plt.tight_layout()
+
+        plt.savefig(
+            distribution_path
+        )
+
+        plt.close()
+
+        charts.append(
+            distribution_path
+        )
+
+    # ==========================
+    # Feature Importance
+    # ==========================
+
+    if (
+        target_column in numeric_df.columns
+        and len(numeric_df.columns) > 1
+    ):
+
+        correlation = (
+            numeric_df.corr()[
+                target_column
+            ]
+            .drop(target_column)
+            .sort_values(
+                ascending=False
+            )
+        )
+
+        plt.figure(figsize=(8, 5))
+
+        correlation.plot(
+            kind="bar"
+        )
+
+        plt.title(
+            f"Feature Impact on {target_column}"
+        )
+
+        importance_path = (
+            "uploads/reports/"
+            "feature_importance.png"
+        )
+
+        plt.tight_layout()
+
+        plt.savefig(
+            importance_path
+        )
+
+        plt.close()
+
+        charts.append(
+            importance_path
+        )
 
     return charts

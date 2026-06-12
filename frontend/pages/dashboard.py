@@ -7,7 +7,21 @@ from utils.api import (
     predict
 )
 
-st.title("📊 Dashboard")
+BACKEND_URL = "http://127.0.0.1:8000"
+
+st.title("🚀 Autonomous Data Intelligence Platform")
+
+st.caption(
+    "Upload datasets, generate AI insights, train models automatically, and make predictions."
+)
+
+st.markdown("---")
+
+# =====================================================
+# DATASET UPLOAD
+# =====================================================
+
+st.header("📂 Dataset Upload")
 
 uploaded_file = st.file_uploader(
     "Upload CSV Dataset",
@@ -34,7 +48,7 @@ if uploaded_file:
     }
 
     with st.spinner(
-        "Analyzing Dataset..."
+        "Analyzing dataset and training models..."
     ):
 
         response = upload_dataset(files)
@@ -47,9 +61,51 @@ if uploaded_file:
 
         basic = insights["insights"]
 
+        problem = insights["problem_info"]
+
+        training = insights["training_results"]
+
+        # =====================================================
+        # EXECUTIVE SUMMARY
+        # =====================================================
+
         st.markdown("---")
 
-        st.header("📈 Dataset Overview")
+        st.header("📋 Executive Summary")
+
+        best_score = max(
+            training["scores"].values()
+        )
+
+        c1, c2, c3, c4 = st.columns(4)
+
+        c1.metric(
+            "Problem Type",
+            problem["problem_type"]
+        )
+
+        c2.metric(
+            "Target Column",
+            problem["target_column"]
+        )
+
+        c3.metric(
+            "Best Model",
+            training["best_model"]
+        )
+
+        c4.metric(
+            "Best Score",
+            round(best_score, 4)
+        )
+
+        # =====================================================
+        # DATASET HEALTH
+        # =====================================================
+
+        st.markdown("---")
+
+        st.header("📊 Dataset Health")
 
         c1, c2, c3, c4 = st.columns(4)
 
@@ -64,38 +120,39 @@ if uploaded_file:
         )
 
         c3.metric(
-            "Missing",
+            "Missing Values",
             basic["missing_values"]
         )
 
         c4.metric(
-            "Duplicates",
+            "Duplicate Rows",
             basic["duplicate_rows"]
         )
 
-        st.markdown("---")
-
-        st.header("🧠 Problem Detection")
-
-        problem = insights["problem_info"]
-
-        c1, c2 = st.columns(2)
-
-        c1.info(
-            f"Target Column: {problem['target_column']}"
-        )
-
-        c2.info(
-            f"Problem Type: {problem['problem_type']}"
-        )
+        # =====================================================
+        # AI ANALYTICS SUMMARY
+        # =====================================================
 
         st.markdown("---")
 
-        st.header("🤖 Model Leaderboard")
+        st.header("🤖 AI Analytics Summary")
 
-        training = insights["training_results"]
+        st.info(
+            insights.get(
+                "analytics_insight",
+                "No analytics summary available."
+            )
+        )
 
-        leaderboard = pd.DataFrame(
+        # =====================================================
+        # MODEL PERFORMANCE
+        # =====================================================
+
+        st.markdown("---")
+
+        st.header("🏆 Model Performance")
+
+        scores_df = pd.DataFrame(
             list(
                 training["scores"].items()
             ),
@@ -105,30 +162,139 @@ if uploaded_file:
             ]
         )
 
-        leaderboard = leaderboard.sort_values(
+        scores_df = scores_df.sort_values(
             "Score",
             ascending=False
         )
 
-        st.dataframe(
-            leaderboard,
-            use_container_width=True
-        )
+        left, right = st.columns(2)
 
-        st.success(
-            f"🏆 Best Model: {training['best_model']}"
-        )
+        with left:
+
+            st.subheader(
+                "Model Leaderboard"
+            )
+
+            st.dataframe(
+                scores_df,
+                use_container_width=True
+            )
+
+        with right:
+
+            st.subheader(
+                "Performance Comparison"
+            )
+
+            st.bar_chart(
+                scores_df.set_index(
+                    "Model"
+                )
+            )
+
+        # =====================================================
+        # ADVANCED ANALYTICS
+        # =====================================================
 
         st.markdown("---")
 
-        st.header("✨ AI Dataset Insights")
+        st.header("📈 Advanced Analytics")
 
-        st.info(
+        charts = insights.get(
+            "charts",
+            []
+        )
+
+        if len(charts) >= 4:
+
+            row1_col1, row1_col2 = st.columns(2)
+
+            with row1_col1:
+
+                st.subheader(
+                    "🔥 Correlation Heatmap"
+                )
+
+                st.image(
+                    BACKEND_URL + "/" +
+                    charts[0].replace(
+                        "uploads/",
+                        ""
+                    ),
+                    use_container_width=True
+                )
+
+            with row1_col2:
+
+                st.subheader(
+                    "🎯 Feature Importance"
+                )
+
+                st.image(
+                    BACKEND_URL + "/" +
+                    charts[3].replace(
+                        "uploads/",
+                        ""
+                    ),
+                    use_container_width=True
+                )
+
+            row2_col1, row2_col2 = st.columns(2)
+
+            with row2_col1:
+
+                st.subheader(
+                    "📈 Target Distribution"
+                )
+
+                st.image(
+                    BACKEND_URL + "/" +
+                    charts[2].replace(
+                        "uploads/",
+                        ""
+                    ),
+                    use_container_width=True
+                )
+
+            with row2_col2:
+
+                st.subheader(
+                    "🧹 Data Quality Analysis"
+                )
+
+                st.image(
+                    BACKEND_URL + "/" +
+                    charts[1].replace(
+                        "uploads/",
+                        ""
+                    ),
+                    use_container_width=True
+                )
+
+        else:
+
+            st.warning(
+                "Charts not available."
+            )
+
+        # =====================================================
+        # AI DATASET INSIGHTS
+        # =====================================================
+
+        st.markdown("---")
+
+        st.header("🧠 AI Dataset Insights")
+
+        st.success(
             insights.get(
                 "ai_insights",
-                "No AI insights available."
+                "No AI insights generated."
             )
         )
+
+        # =====================================================
+        # MODEL REASONING
+        # =====================================================
 
         st.markdown("---")
 
@@ -137,72 +303,60 @@ if uploaded_file:
         st.info(
             insights.get(
                 "model_reasoning",
-                "No reasoning available."
+                "No model reasoning available."
             )
         )
 
-        st.markdown("---")
-
-        st.header("📈 Visual Analytics")
-
-        charts = insights.get(
-            "charts",
-            []
-        )
-
-        cols = st.columns(2)
-
-        for idx, chart in enumerate(charts):
-
-            chart_url = (
-                "http://127.0.0.1:8000/"
-                + chart.replace(
-                    "uploads/",
-                    ""
-                )
-            )
-
-            cols[idx % 2].image(
-                chart_url,
-                use_container_width=True
-            )
+        # =====================================================
+        # DOWNLOAD REPORT
+        # =====================================================
 
         st.markdown("---")
+
+        st.header("📥 Download Report")
 
         st.download_button(
-            "📥 Download Report",
+            label="Download Full Analysis Report",
             data=json.dumps(
                 result,
                 indent=4
             ),
-            file_name="report.json",
+            file_name="analysis_report.json",
             mime="application/json"
         )
+
+# =====================================================
+# PREDICTION CENTER
+# =====================================================
 
 st.markdown("---")
 
 st.header("🔮 Prediction Center")
 
-with st.form("prediction_form"):
+st.caption(
+    "Predict values using the best trained model."
+)
+
+with st.form(
+    "prediction_form"
+):
 
     col1, col2 = st.columns(2)
 
     age = col1.number_input(
         "Age",
-        min_value=18,
-        max_value=100,
+        min_value=0,
         value=30
     )
 
     experience = col2.number_input(
         "Experience",
         min_value=0,
-        max_value=50,
         value=5
     )
 
     submit = st.form_submit_button(
-        "Predict"
+        "Generate Prediction"
     )
 
 if submit:
@@ -212,20 +366,28 @@ if submit:
         "experience": experience
     }
 
-    response = predict(payload)
+    response = predict(
+        payload
+    )
 
     if response.status_code == 200:
 
-        result = response.json()
+        prediction = response.json()
 
         st.success(
-            f"💰 Predicted Value: ₹ {result['prediction']:,.2f}"
+            f"💰 Prediction: ₹ {prediction['prediction']:,.2f}"
         )
 
         st.markdown(
-            "### 🤖 AI Explanation"
+            "### 🤖 AI Prediction Explanation"
         )
 
         st.info(
-            result["explanation"]
+            prediction["explanation"]
+        )
+
+    else:
+
+        st.error(
+            "Prediction failed."
         )

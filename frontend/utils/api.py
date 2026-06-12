@@ -21,3 +21,10 @@ def get_history():
     return requests.get(
         f"{BACKEND_URL}/history"
     )
+
+
+def get_metadata():
+
+    return requests.get(
+        f"{BACKEND_URL}/metadata"
+    )

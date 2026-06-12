@@ -32,6 +32,7 @@ def train_models(df, target_column, problem_type):
     y = df[target_column]
 
     # Convert categorical features
+    original_feature_columns = list(X.columns)
     X = pd.get_dummies(X)
 
     # ==========================
@@ -177,12 +178,23 @@ def train_models(df, target_column, problem_type):
     # ==========================
 
     metadata = {
-        "target_column": target_column,
-        "feature_columns": list(X.columns),
-        "problem_type": problem_type,
-        "best_model": best_model_name,
-        "model_path": model_path
-    }
+    "target_column": target_column,
+
+    "original_features":
+        original_feature_columns,
+
+    "encoded_features":
+        list(X.columns),
+
+    "problem_type":
+        problem_type,
+
+    "best_model":
+        best_model_name,
+
+    "model_path":
+        model_path
+}
 
     with open(
         "ml_engine/models/model_metadata.json",
