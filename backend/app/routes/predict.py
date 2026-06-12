@@ -1,9 +1,13 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from ml_engine.agents.prediction_agent import (
+    explain_prediction
+)
 import pandas as pd
 import joblib
 import json
 import os
+
 
 router = APIRouter()
 
@@ -30,15 +34,24 @@ async def predict(data: PredictionInput):
 
     if not os.path.exists(MODEL_PATH):
         return {
-            "error": "Model file not found"
-        }
+        "error": "Model file not found"
+    }
 
     model = joblib.load(MODEL_PATH)
+    input_df = pd.DataFrame([
+    data.model_dump()
+    ])
 
-    df = pd.DataFrame([data.model_dump()])
+    prediction = model.predict(
+    input_df
+    )[0]
 
-    prediction = model.predict(df)
+    explanation = explain_prediction(
+    prediction,
+    data.model_dump()
+    )
 
     return {
-        "prediction": float(prediction[0])
-    }
+    "prediction": float(prediction),
+    "explanation": explanation
+}

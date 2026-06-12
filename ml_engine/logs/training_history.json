@@ -158,5 +158,16 @@
         },
         "problem_type": "regression",
         "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-12 13:56:35",
+        "best_model": "Linear Regression",
+        "scores": {
+            "Linear Regression": 0.9853,
+            "Random Forest": 0.9731,
+            "XGBoost": 0.9766
+        },
+        "problem_type": "regression",
+        "target_column": "salary"
     }
 ]
