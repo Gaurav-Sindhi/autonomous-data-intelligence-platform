@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import json
+import requests
 
 from utils.api import (
     upload_dataset,
@@ -59,7 +60,9 @@ if uploaded_file:
 
         insights = result["insights"]
 
-        basic = insights["insights"]
+        raw = result["raw_insights"]
+
+        cleaned = result["cleaned_insights"]
 
         problem = insights["problem_info"]
 
@@ -99,35 +102,40 @@ if uploaded_file:
             round(best_score, 4)
         )
 
-        # =====================================================
+         # =====================================================
         # DATASET HEALTH
         # =====================================================
+        st.header("📊 Data Quality Report")
 
-        st.markdown("---")
+        col1, col2 = st.columns(2)
 
-        st.header("📊 Dataset Health")
+        with col1:
 
-        c1, c2, c3, c4 = st.columns(4)
+            st.subheader("Before Cleaning")
 
-        c1.metric(
-            "Rows",
-            basic["rows"]
-        )
+            st.metric(
+                "Missing Values",
+                raw["missing_values"]
+            )
 
-        c2.metric(
-            "Columns",
-            basic["columns"]
-        )
+            st.metric(
+                "Duplicates",
+                raw["duplicate_rows"]
+            )
 
-        c3.metric(
-            "Missing Values",
-            basic["missing_values"]
-        )
+        with col2:
 
-        c4.metric(
-            "Duplicate Rows",
-            basic["duplicate_rows"]
-        )
+            st.subheader("After Cleaning")
+
+            st.metric(
+                "Missing Values",
+                cleaned["missing_values"]
+            )
+
+            st.metric(
+                "Duplicates",
+                cleaned["duplicate_rows"]
+            )
 
         # =====================================================
         # AI ANALYTICS SUMMARY
@@ -197,85 +205,41 @@ if uploaded_file:
         # =====================================================
 
         st.markdown("---")
-
-        st.header("📈 Advanced Analytics")
+        st.header("📈 Advanced Analytics"
+        )
 
         charts = insights.get(
             "charts",
             []
         )
 
-        if len(charts) >= 4:
+        if not charts:
 
-            row1_col1, row1_col2 = st.columns(2)
-
-            with row1_col1:
-
-                st.subheader(
-                    "🔥 Correlation Heatmap"
-                )
-
-                st.image(
-                    BACKEND_URL + "/" +
-                    charts[0].replace(
-                        "uploads/",
-                        ""
-                    ),
-                    use_container_width=True
-                )
-
-            with row1_col2:
-
-                st.subheader(
-                    "🎯 Feature Importance"
-                )
-
-                st.image(
-                    BACKEND_URL + "/" +
-                    charts[3].replace(
-                        "uploads/",
-                        ""
-                    ),
-                    use_container_width=True
-                )
-
-            row2_col1, row2_col2 = st.columns(2)
-
-            with row2_col1:
-
-                st.subheader(
-                    "📈 Target Distribution"
-                )
-
-                st.image(
-                    BACKEND_URL + "/" +
-                    charts[2].replace(
-                        "uploads/",
-                        ""
-                    ),
-                    use_container_width=True
-                )
-
-            with row2_col2:
-
-                st.subheader(
-                    "🧹 Data Quality Analysis"
-                )
-
-                st.image(
-                    BACKEND_URL + "/" +
-                    charts[1].replace(
-                        "uploads/",
-                        ""
-                    ),
-                    use_container_width=True
-                )
+            st.info(
+                "No meaningful visualizations available."
+            )
 
         else:
 
-            st.warning(
-                "Charts not available."
-            )
+            for chart in charts:
+
+                st.subheader(
+                    chart["title"]
+                )
+
+                image_url = (
+                    BACKEND_URL + "/" +
+                    chart["path"]
+                    .replace(
+                        "uploads/",
+                        ""
+                    )
+                )
+
+                st.image(
+                    image_url,
+                    use_container_width=True
+                ) 
 
         # =====================================================
         # AI DATASET INSIGHTS
@@ -311,83 +275,125 @@ if uploaded_file:
         # DOWNLOAD REPORT
         # =====================================================
 
+
         st.markdown("---")
 
-        st.header("📥 Download Report")
+        st.header("📥 Download Reports")
 
-        st.download_button(
-            label="Download Full Analysis Report",
-            data=json.dumps(
-                result,
-                indent=4
-            ),
-            file_name="analysis_report.json",
-            mime="application/json"
-        )
+        col1, col2 = st.columns(2)
+
+        # ==========================
+        # JSON REPORT
+        # ==========================
+
+        with col1:
+
+            st.download_button(
+                label="📊 Download JSON Report",
+                data=json.dumps(
+                    result,
+                    indent=4
+                ),
+                file_name="analysis_report.json",
+                mime="application/json"
+            )
+
+        # ==========================
+        # PDF REPORT
+        # ==========================
+
+        with col2:
+
+            pdf_path = insights.get(
+                "pdf_report"
+            )
+
+            if pdf_path:
+
+                try:
+
+                    with open(
+                        pdf_path,
+                        "rb"
+                    ) as pdf_file:
+
+                        st.download_button(
+                            label="📄 Download PDF Report",
+                            data=pdf_file,
+                            file_name="analysis_report.pdf",
+                            mime="application/pdf"
+                        )
+
+                except Exception as e:
+
+                    st.warning(
+                        "PDF report not available."
+                    )
+
+            else:
+
+                st.info(
+                    "Generate a dataset report first."
+                )
 
 # =====================================================
 # PREDICTION CENTER
 # =====================================================
 
-st.markdown("---")
+        st.markdown("---")
 
-st.header("🔮 Prediction Center")
-
-st.caption(
-    "Predict values using the best trained model."
-)
-
-with st.form(
-    "prediction_form"
-):
-
-    col1, col2 = st.columns(2)
-
-    age = col1.number_input(
-        "Age",
-        min_value=0,
-        value=30
-    )
-
-    experience = col2.number_input(
-        "Experience",
-        min_value=0,
-        value=5
-    )
-
-    submit = st.form_submit_button(
-        "Generate Prediction"
-    )
-
-if submit:
-
-    payload = {
-        "age": age,
-        "experience": experience
-    }
-
-    response = predict(
-        payload
-    )
-
-    if response.status_code == 200:
-
-        prediction = response.json()
-
-        st.success(
-            f"💰 Prediction: ₹ {prediction['prediction']:,.2f}"
+        metadata_response = requests.get(
+            f"{BACKEND_URL}/metadata"
         )
 
-        st.markdown(
-            "### 🤖 AI Prediction Explanation"
-        )
+        metadata = metadata_response.json()
 
-        st.info(
-            prediction["explanation"]
-        )
+        st.header("🔮 Prediction Center")
 
-    else:
+        if "feature_columns" in metadata:
 
-        st.error(
-            "Prediction failed."
-        )
+            feature_columns = metadata["feature_columns"]
+
+            prediction_payload = {}
+
+            with st.form("prediction_form"):
+
+                for feature in feature_columns:
+
+                    value = st.text_input(
+                        feature,
+                        ""
+                    )
+
+                    prediction_payload[
+                        feature
+                    ] = value
+
+                submit = st.form_submit_button(
+                    "Predict"
+                )
+
+            if submit:
+
+                response = requests.post(
+                    f"{BACKEND_URL}/predict",
+                    json=prediction_payload
+                )
+
+                if response.status_code == 200:
+
+                    prediction = response.json()
+
+                    st.success(
+                        f"Prediction: {prediction['prediction']}"
+                    )
+
+                    st.info(
+                        prediction["explanation"]
+                    )
+
+                else:
+
+                    st.error(
+                        "Prediction failed"
+                    )

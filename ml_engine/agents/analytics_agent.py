@@ -14,24 +14,30 @@ model = genai.GenerativeModel(
 
 
 def generate_analytics_insight(
-    summary_text
+    raw_insights,
+    cleaned_insights
 ):
 
     prompt = f"""
     You are a Senior Data Analyst.
 
+    Original Dataset Statistics:
+
+    {raw_insights}
+
+    Cleaned Dataset Statistics:
+
+    {cleaned_insights}
+
     Analyze:
 
-    {summary_text}
+    1. Data quality before cleaning
+    2. Cleaning improvements made
+    3. Important patterns
+    4. Risks
+    5. Recommendations
 
-    Give:
-
-    1. Dataset quality
-    2. Important patterns
-    3. Risks
-    4. Recommendation
-
-    Maximum 120 words.
+    Maximum 150 words.
     """
 
     try:

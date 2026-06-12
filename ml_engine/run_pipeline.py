@@ -1,15 +1,17 @@
 import pandas as pd
 
+from ml_engine import insights
 from ml_engine.pipeline.cleaning import clean_data
 from ml_engine.insights.insight_generator import generate_basic_insights
 from ml_engine.pipeline.problem_detector import detect_problem
 from ml_engine.pipeline.model_trainer import train_models
-
+from ml_engine.reports.pdf_generator import generate_pdf_report
 from ml_engine.visualization.chart_generator import generate_charts
 
 from ml_engine.agents.insight_agent import generate_ai_insights
 from ml_engine.agents.analytics_agent import generate_analytics_insight
-from ml_engine.agents.model_selection_agent import generate_model_reasoning
+from ml_engine.agents.model_selection_agent import explain_model_choice
+
 
 
 def run_pipeline(file_path):
@@ -18,19 +20,13 @@ def run_pipeline(file_path):
     # Load Dataset
     # ==========================
 
-    df = pd.read_csv(file_path)
+    raw_df = pd.read_csv(file_path)
 
-    # ==========================
-    # Data Cleaning
-    # ==========================
+    raw_insights = generate_basic_insights(raw_df)
 
-    df = clean_data(df)
+    df = clean_data(raw_df.copy())
 
-    # ==========================
-    # Dataset Insights
-    # ==========================
-
-    insights = generate_insights(df)
+    cleaned_insights = generate_basic_insights(df)
 
     # ==========================
     # Problem Detection
@@ -66,20 +62,20 @@ def run_pipeline(file_path):
     # ==========================
 
     ai_insights = generate_ai_insights(
-        insights,
-        problem_info,
-        training_results
-    )
+    raw_insights,
+    cleaned_insights,
+    problem_info,
+    training_results
+)
 
     # ==========================
     # Model Reasoning Agent
     # ==========================
 
-    model_reasoning = generate_model_reasoning(
-        training_results,
-        problem_type
-    )
-
+    model_reasoning = explain_model_choice(
+    problem_info,
+    training_results
+)
     # ==========================
     # Analytics Summary Agent
     # ==========================
@@ -100,27 +96,42 @@ def run_pipeline(file_path):
     {training_results['best_model']}
     """
 
-    analytics_insight = generate_analytics_insight(
-        analytics_summary
+    analytics_insight = (
+    generate_analytics_insight(
+        raw_insights,
+        cleaned_insights
     )
+)
 
+    pdf_report = generate_pdf_report(
+        {
+            "insights": insights,
+            "problem_info": problem_info,
+            "training_results": training_results,
+            "analytics_insight": analytics_insight,
+            "ai_insights": ai_insights,
+            "model_reasoning": model_reasoning
+         }
+    )
     # ==========================
     # Final Response
     # ==========================
 
     return {
 
-        "insights": insights,
+    "raw_insights": raw_insights,
 
-        "problem_info": problem_info,
+    "cleaned_insights": cleaned_insights,
 
-        "training_results": training_results,
+    "problem_info": problem_info,
 
-        "charts": charts,
+    "training_results": training_results,
 
-        "ai_insights": ai_insights,
+    "charts": charts,
 
-        "model_reasoning": model_reasoning,
+    "ai_insights": ai_insights,
 
-        "analytics_insight": analytics_insight
-    }
+    "model_reasoning": model_reasoning,
+
+    "analytics_insight": analytics_insight
+}

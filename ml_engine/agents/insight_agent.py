@@ -17,31 +17,36 @@ model = genai.GenerativeModel(
 )
 
 def generate_ai_insights(
-    insights,
+    raw_insights,
+    cleaned_insights,
     problem_info,
     training_results
 ):
 
     prompt = f"""
-    You are an expert Data Scientist.
+    Original Dataset Statistics:
 
-    Dataset Insights:
-    {insights}
+    {raw_insights}
 
-    Problem Info:
+    Cleaned Dataset Statistics:
+
+    {cleaned_insights}
+
+    Problem Information:
+
     {problem_info}
 
     Training Results:
+
     {training_results}
 
     Generate:
 
     1. Dataset Summary
-    2. Important Patterns
-    3. Model Evaluation
-    4. Recommendations
-
-    Keep the response concise.
+    2. Data Cleaning Impact
+    3. Important Patterns
+    4. Model Evaluation
+    5. Recommendations
     """
 
     try:

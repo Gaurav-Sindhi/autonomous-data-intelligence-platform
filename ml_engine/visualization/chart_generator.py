@@ -1,10 +1,15 @@
 import os
+
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 import pandas as pd
 
 
-def generate_charts(df, target_column):
+def generate_charts(
+    df,
+    target_column
+):
 
     os.makedirs(
         "uploads/reports",
@@ -13,89 +18,23 @@ def generate_charts(df, target_column):
 
     charts = []
 
-    # ==========================
-    # Correlation Heatmap
-    # ==========================
-
-    numeric_df = df.select_dtypes(
-        include=["number"]
+    numeric_cols = list(
+        df.select_dtypes(
+            include=["number"]
+        ).columns
     )
 
-    if len(numeric_df.columns) > 1:
-
-        plt.figure(figsize=(10, 8))
-
-        sns.heatmap(
-            numeric_df.corr(),
-            annot=True,
-            cmap="coolwarm"
-        )
-
-        plt.title(
-            "Correlation Heatmap"
-        )
-
-        heatmap_path = (
-            "uploads/reports/"
-            "heatmap.png"
-        )
-
-        plt.tight_layout()
-
-        plt.savefig(
-            heatmap_path
-        )
-
-        plt.close()
-
-        charts.append(
-            heatmap_path
-        )
-
-    # ==========================
-    # Missing Values Analysis
-    # ==========================
-
-    plt.figure(figsize=(8, 5))
-
-    missing_values = (
-        df.isnull().sum()
-    )
-
-    missing_values.plot(
-        kind="bar"
-    )
-
-    plt.title(
-        "Missing Values Analysis"
-    )
-
-    plt.ylabel(
-        "Count"
-    )
-
-    missing_path = (
-        "uploads/reports/"
-        "missing_values.png"
-    )
-
-    plt.tight_layout()
-
-    plt.savefig(
-        missing_path
-    )
-
-    plt.close()
-
-    charts.append(
-        missing_path
+    categorical_cols = list(
+        df.select_dtypes(
+            exclude=["number"]
+        ).columns
     )
 
     # ==========================
-    # Target Distribution
+    # TARGET DISTRIBUTION
     # ==========================
 
-    if target_column in df.columns:
+    if target_column in numeric_cols:
 
         plt.figure(figsize=(8, 5))
 
@@ -108,67 +47,172 @@ def generate_charts(df, target_column):
             f"{target_column} Distribution"
         )
 
-        distribution_path = (
+        path = (
             "uploads/reports/"
             "target_distribution.png"
         )
 
         plt.tight_layout()
 
-        plt.savefig(
-            distribution_path
-        )
+        plt.savefig(path)
 
         plt.close()
 
         charts.append(
-            distribution_path
+            {
+                "title":
+                "Target Distribution",
+
+                "path":
+                path
+            }
         )
 
     # ==========================
-    # Feature Importance
+    # CORRELATION HEATMAP
+    # ==========================
+
+    if len(numeric_cols) >= 2:
+
+        plt.figure(figsize=(8, 6))
+
+        sns.heatmap(
+            df[numeric_cols].corr(),
+            annot=True,
+            cmap="coolwarm"
+        )
+
+        plt.title(
+            "Correlation Heatmap"
+        )
+
+        path = (
+            "uploads/reports/"
+            "heatmap.png"
+        )
+
+        plt.tight_layout()
+
+        plt.savefig(path)
+
+        plt.close()
+
+        charts.append(
+            {
+                "title":
+                "Correlation Heatmap",
+
+                "path":
+                path
+            }
+        )
+
+    # ==========================
+    # FEATURE IMPORTANCE
     # ==========================
 
     if (
-        target_column in numeric_df.columns
-        and len(numeric_df.columns) > 1
+        target_column in numeric_cols
+        and
+        len(numeric_cols) >= 2
     ):
 
-        correlation = (
-            numeric_df.corr()[
-                target_column
-            ]
+        corr = (
+            df[numeric_cols]
+            .corr()[target_column]
             .drop(target_column)
+            .abs()
             .sort_values(
                 ascending=False
             )
         )
 
-        plt.figure(figsize=(8, 5))
+        if len(corr) > 0:
 
-        correlation.plot(
-            kind="bar"
+            plt.figure(
+                figsize=(8, 5)
+            )
+
+            corr.plot(
+                kind="bar"
+            )
+
+            plt.title(
+                "Feature Influence"
+            )
+
+            path = (
+                "uploads/reports/"
+                "feature_importance.png"
+            )
+
+            plt.tight_layout()
+
+            plt.savefig(path)
+
+            plt.close()
+
+            charts.append(
+                {
+                    "title":
+                    "Feature Importance",
+
+                    "path":
+                    path
+                }
+            )
+
+    # ==========================
+    # CATEGORICAL DISTRIBUTION
+    # ==========================
+
+    if len(categorical_cols) > 0:
+
+        best_col = max(
+            categorical_cols,
+            key=lambda x:
+            df[x].nunique()
         )
 
-        plt.title(
-            f"Feature Impact on {target_column}"
-        )
+        if (
+            df[best_col]
+            .nunique()
+            <= 20
+        ):
 
-        importance_path = (
-            "uploads/reports/"
-            "feature_importance.png"
-        )
+            plt.figure(
+                figsize=(8, 5)
+            )
 
-        plt.tight_layout()
+            df[
+                best_col
+            ].value_counts().plot(
+                kind="bar"
+            )
 
-        plt.savefig(
-            importance_path
-        )
+            plt.title(
+                f"{best_col} Distribution"
+            )
 
-        plt.close()
+            path = (
+                "uploads/reports/"
+                "category_distribution.png"
+            )
 
-        charts.append(
-            importance_path
-        )
+            plt.tight_layout()
+
+            plt.savefig(path)
+
+            plt.close()
+
+            charts.append(
+                {
+                    "title":
+                    "Category Distribution",
+
+                    "path":
+                    path
+                }
+            )
 
     return charts

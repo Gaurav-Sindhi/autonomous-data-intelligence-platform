@@ -6,6 +6,7 @@ import pandas as pd
 from datetime import datetime
 
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 
 # Classification
 from sklearn.linear_model import LogisticRegression
@@ -49,11 +50,16 @@ def train_models(df, target_column, problem_type):
     results = {}
     trained_models = {}
 
+    
     # ==========================
     # Classification Models
     # ==========================
 
     if problem_type == "classification":
+
+        encoder = LabelEncoder()
+
+        y = encoder.fit_transform(y)
 
         models = {
 
@@ -177,24 +183,24 @@ def train_models(df, target_column, problem_type):
     # Save Metadata
     # ==========================
 
+    original_features = [
+    col for col in df.columns
+    if col != target_column
+]
+
     metadata = {
-    "target_column": target_column,
+        "target_column": target_column,
 
-    "original_features":
-        original_feature_columns,
+        "feature_columns": original_features,
 
-    "encoded_features":
-        list(X.columns),
+        "encoded_features": list(X.columns),
 
-    "problem_type":
-        problem_type,
+        "problem_type": problem_type,
 
-    "best_model":
-        best_model_name,
+        "best_model": best_model_name,
 
-    "model_path":
-        model_path
-}
+        "model_path": model_path
+    }
 
     with open(
         "ml_engine/models/model_metadata.json",

@@ -169,5 +169,104 @@
         },
         "problem_type": "regression",
         "target_column": "salary"
+    },
+    {
+        "timestamp": "2026-06-12 16:15:21",
+        "best_model": "Random Forest",
+        "scores": {
+            "Linear Regression": 0.8517,
+            "Random Forest": 0.8772,
+            "XGBoost": 0.864
+        },
+        "problem_type": "regression",
+        "target_column": "marks"
+    },
+    {
+        "timestamp": "2026-06-12 16:22:01",
+        "best_model": "Random Forest",
+        "scores": {
+            "Linear Regression": 0.8517,
+            "Random Forest": 0.8772,
+            "XGBoost": 0.864
+        },
+        "problem_type": "regression",
+        "target_column": "marks"
+    },
+    {
+        "timestamp": "2026-06-12 17:37:59",
+        "best_model": "Random Forest",
+        "scores": {
+            "Linear Regression": 0.8517,
+            "Random Forest": 0.8772,
+            "XGBoost": 0.864
+        },
+        "problem_type": "regression",
+        "target_column": "marks"
+    },
+    {
+        "timestamp": "2026-06-12 18:02:18",
+        "best_model": "Random Forest",
+        "scores": {
+            "Linear Regression": 0.8517,
+            "Random Forest": 0.8772,
+            "XGBoost": 0.864
+        },
+        "problem_type": "regression",
+        "target_column": "marks"
+    },
+    {
+        "timestamp": "2026-06-12 18:10:34",
+        "best_model": "Random Forest",
+        "scores": {
+            "Linear Regression": 0.8517,
+            "Random Forest": 0.8772,
+            "XGBoost": 0.864
+        },
+        "problem_type": "regression",
+        "target_column": "marks"
+    },
+    {
+        "timestamp": "2026-06-12 18:20:19",
+        "best_model": "Random Forest",
+        "scores": {
+            "Linear Regression": 0.5916,
+            "Random Forest": 1.0,
+            "XGBoost": 1.0
+        },
+        "problem_type": "regression",
+        "target_column": "alone"
+    },
+    {
+        "timestamp": "2026-06-12 18:22:08",
+        "best_model": "Random Forest",
+        "scores": {
+            "Linear Regression": 0.5916,
+            "Random Forest": 1.0,
+            "XGBoost": 1.0
+        },
+        "problem_type": "regression",
+        "target_column": "alone"
+    },
+    {
+        "timestamp": "2026-06-12 18:52:03",
+        "best_model": "XGBoost",
+        "scores": {
+            "Logistic Regression": 0.8212,
+            "Random Forest": 0.8212,
+            "XGBoost": 0.8268
+        },
+        "problem_type": "classification",
+        "target_column": "Survived"
+    },
+    {
+        "timestamp": "2026-06-12 18:54:09",
+        "best_model": "XGBoost",
+        "scores": {
+            "Logistic Regression": 0.8212,
+            "Random Forest": 0.8212,
+            "XGBoost": 0.8268
+        },
+        "problem_type": "classification",
+        "target_column": "Survived"
     }
 ]
