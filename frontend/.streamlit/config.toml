@@ -1,6 +1,101 @@
+# ══════════════════════════════════════════════════════════════════════════════
+#  ADI Platform — Streamlit Theme Configuration
+#
+#  PALETTE: "Midnight Indigo"
+#  ─────────────────────────────────────────────────────────────────────────────
+#  A deep-navy dark theme built for data-dense AI/ML dashboards.
+#  Inspired by professional SaaS tools like Linear, Vercel, and Retool.
+#
+#  Core palette:
+#    Indigo-500   #6366F1   → primary accent (buttons, links, focus)
+#    Navy-950     #0F1729   → page background (deepest layer)
+#    Navy-900     #1A2236   → card / sidebar surface
+#    Slate-100    #E2E8F0   → primary text (high contrast on dark)
+#
+#  Supporting colours (used in CSS only, not in config.toml):
+#    Indigo-400   #818CF8   → hover, lighter accent
+#    Indigo-200   #C7D2FE   → very pale accent tint
+#    Indigo-950   #1E1B4B   → accent bg on dark (badge, chip)
+#    Emerald-400  #34D399   → success / green indicators
+#    Emerald-950  #022C22   → green card bg
+#    Amber-400    #FBBF24   → warning / amber indicators
+#    Amber-950    #451A03   → amber card bg
+#    Rose-400     #FB7185   → error / danger
+#    Slate-400    #94A3B8   → muted text
+#    Slate-600    #475569   → border / divider
+#    Slate-700    #334155   → stronger border
+#
+#  FOLDER STRUCTURE (required):
+#    your_project/
+#    ├── .streamlit/
+#    │   └── config.toml   ← THIS FILE (next to app.py, not inside pages/)
+#    ├── app.py
+#    ├── pages/
+#    │   ├── 1_Dashboard.py
+#    │   ├── 2_History.py
+#    │   └── 3_About.py
+#    └── utils/
+#        └── api.py
+#
+#  Run: streamlit run app.py
+#  After any config change: Ctrl+C then restart — hot-reload won't apply it.
+# ══════════════════════════════════════════════════════════════════════════════
+
 [theme]
-base="light"
-primaryColor="#06B6D4"
-backgroundColor="#EEF5FB"
-secondaryBackgroundColor="#FFFFFF"
-textColor="#111827"
+
+# Forces dark base — without this Streamlit uses OS preference and
+# ignores every colour value below.
+base = "dark"
+
+# Indigo-500 — the primary accent colour.
+# Drives: buttons, checkboxes, radio buttons, sliders, progress bars,
+# select-box focus border, active tab underline, links, spinner ring.
+primaryColor = "#6366F1"
+
+# Deepest navy — the outermost page canvas.
+# Everything sits on top of this layer.
+backgroundColor = "#0F1729"
+
+# Slightly lighter navy — sidebar, metric tiles, expanders,
+# dataframes, text input backgrounds, code blocks, form backgrounds.
+secondaryBackgroundColor = "#1A2236"
+
+# Slate-100 — primary readable text on dark backgrounds.
+# Drives: body copy, labels, metric values, table cell text, captions.
+textColor = "#E2E8F0"
+
+# Sans-serif fallback while Inter loads via Google Fonts in app.py CSS.
+font = "sans serif"
+
+# ──────────────────────────────────────────────────────────────────────────────
+[server]
+
+# Suppresses the auto-open-browser banner — cleaner for demos and deployment.
+headless = true
+
+# Disable hot-reload in production (saves CPU). Use true during dev.
+runOnSave = false
+
+# ──────────────────────────────────────────────────────────────────────────────
+[browser]
+
+# No telemetry pings during demos or presentations.
+gatherUsageStats = false
+
+# ──────────────────────────────────────────────────────────────────────────────
+[client]
+
+# Hides raw Python tracebacks from end users in production.
+showErrorDetails = false
+
+# ──────────────────────────────────────────────────────────────────────────────
+[runner]
+
+# Prevents st.write() magic from triggering unexpected reruns.
+magicEnabled = false
+
+# ──────────────────────────────────────────────────────────────────────────────
+[logger]
+
+# Quiet terminal output during demos. Use "info" or "debug" during dev.
+level = "warning"
