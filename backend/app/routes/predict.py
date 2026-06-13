@@ -41,11 +41,30 @@ async def predict(
     "encoded_features"
     ]
 
-    for col in encoded_columns:
-        if col not in input_df.columns:
-            input_df[col] = 0
+    # Add missing columns efficiently
+    missing_cols = [
+        col
+        for col in encoded_columns
+        if col not in input_df.columns
+    ]
+
+    if missing_cols:
+
+        new_cols = pd.DataFrame(
+            0,
+            index=input_df.index,
+            columns=missing_cols
+        )
+
+        input_df = pd.concat(
+            [input_df, new_cols],
+            axis=1
+        )
+
+    # Ensure exact same column order as training
     input_df = input_df[encoded_columns]
 
+    # Prediction
     prediction = model.predict(
         input_df
     )[0]

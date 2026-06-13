@@ -49,7 +49,9 @@ def generate_pdf_report(result):
     # Dataset Summary
     # =====================
 
-    insights = result["insights"]
+    raw_insights = result["raw_insights"]
+
+    cleaned_insights = result["cleaned_insights"]
 
     elements.append(
         Paragraph(
@@ -58,30 +60,84 @@ def generate_pdf_report(result):
         )
     )
 
+    # =====================
+    # BEFORE CLEANING
+    # =====================
+
     elements.append(
         Paragraph(
-            f"Rows: {insights['rows']}",
+            "Before Cleaning",
+            styles["Heading2"]
+        )
+    )
+
+    elements.append(
+        Paragraph(
+            f"Rows: {raw_insights['rows']}",
             styles["BodyText"]
         )
     )
 
     elements.append(
         Paragraph(
-            f"Columns: {insights['columns']}",
+            f"Columns: {raw_insights['columns']}",
             styles["BodyText"]
         )
     )
 
     elements.append(
         Paragraph(
-            f"Missing Values: {insights['missing_values']}",
+            f"Missing Values: {raw_insights['missing_values']}",
             styles["BodyText"]
         )
     )
 
     elements.append(
         Paragraph(
-            f"Duplicate Rows: {insights['duplicate_rows']}",
+            f"Duplicate Rows: {raw_insights['duplicate_rows']}",
+            styles["BodyText"]
+        )
+    )
+
+    elements.append(
+        Spacer(1, 10)
+    )
+
+    # =====================
+    # AFTER CLEANING
+    # =====================
+
+    elements.append(
+        Paragraph(
+            "After Cleaning",
+            styles["Heading2"]
+        )
+    )
+
+    elements.append(
+        Paragraph(
+            f"Rows: {cleaned_insights['rows']}",
+            styles["BodyText"]
+        )
+    )
+
+    elements.append(
+        Paragraph(
+            f"Columns: {cleaned_insights['columns']}",
+            styles["BodyText"]
+        )
+    )
+
+    elements.append(
+        Paragraph(
+            f"Missing Values: {cleaned_insights['missing_values']}",
+            styles["BodyText"]
+        )
+    )
+
+    elements.append(
+        Paragraph(
+            f"Duplicate Rows: {cleaned_insights['duplicate_rows']}",
             styles["BodyText"]
         )
     )
