@@ -153,13 +153,13 @@ st.markdown(
                     font-size:1.4rem;flex-shrink:0;">👨‍💻</div>
         <div>
             <div style="font-size:1rem;font-weight:700;color:#e6edf3;">
-                Gaurav Narayani
+                Gaurav Sindhi
             </div>
             <div style="font-size:0.8rem;color:#58a6ff;margin-top:0.15rem;">
                 B.Tech — Artificial Intelligence & Machine Learning
             </div>
             <div style="font-size:0.78rem;color:#8b949e;margin-top:0.25rem;">
-                Final Year Project · Autonomous Data Intelligence Platform
+                2026 Graduate · Autonomous Data Intelligence Platform
             </div>
         </div>
     </div>

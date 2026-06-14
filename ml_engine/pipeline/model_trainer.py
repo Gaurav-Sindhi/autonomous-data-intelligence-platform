@@ -58,34 +58,47 @@ def train_models(df, target_column, problem_type):
     if problem_type == "classification":
 
         encoder = LabelEncoder()
-
         y = encoder.fit_transform(y)
+
+        X_train, X_test, y_train, y_test = train_test_split(
+            X,
+            y,
+            test_size=0.2,
+            random_state=42
+        )
 
         models = {
 
             "Logistic Regression":
                 LogisticRegression(
-                    max_iter=1000
+                    max_iter=500,
+                    solver="liblinear"
                 ),
 
             "Random Forest":
                 RandomForestClassifier(
-                    random_state=42
-                ),
-
-            "XGBoost":
-                XGBClassifier(
                     n_estimators=100,
-                    learning_rate=0.1,
-                    max_depth=4,
-                    eval_metric="logloss",
-                    random_state=42
+                    random_state=42,
+                    n_jobs=-1
                 )
         }
+        
+        models["XGBoost"] = XGBClassifier(
+        n_estimators=100,
+        learning_rate=0.1,
+        max_depth=4,
+        eval_metric="logloss",
+        random_state=42
+        )
+        
 
         for name, model in models.items():
 
+            print(f"Training {name} Started")
+
             model.fit(X_train, y_train)
+
+            print(f"Training {name} Completed")
 
             predictions = model.predict(X_test)
 
@@ -97,12 +110,18 @@ def train_models(df, target_column, problem_type):
             results[name] = round(score, 4)
 
             trained_models[name] = model
-
-    # ==========================
-    # Regression Models
+        # ==========================
+        # Regression Models
     # ==========================
 
     else:
+
+        X_train, X_test, y_train, y_test = train_test_split(
+            X,
+            y,
+            test_size=0.2,
+            random_state=42
+        )
 
         models = {
 
@@ -111,21 +130,29 @@ def train_models(df, target_column, problem_type):
 
             "Random Forest":
                 RandomForestRegressor(
-                    random_state=42
-                ),
-
-            "XGBoost":
-                XGBRegressor(
                     n_estimators=100,
-                    learning_rate=0.1,
-                    max_depth=4,
-                    random_state=42
+                    random_state=42,
+                    n_jobs=-1
                 )
         }
 
+        # Uncomment later after deployment
+    
+        models["XGBoost"] = XGBRegressor(
+            n_estimators=100,
+            learning_rate=0.1,
+            max_depth=4,
+            random_state=42
+        )
+       
+
         for name, model in models.items():
 
+            print(f"Training {name} Started")
+
             model.fit(X_train, y_train)
+
+            print(f"Training {name} Completed")
 
             predictions = model.predict(X_test)
 
@@ -138,6 +165,13 @@ def train_models(df, target_column, problem_type):
 
             trained_models[name] = model
 
+            X = pd.get_dummies(X)
+            print("=" * 50)
+            print("Dataset Shape:", df.shape)
+            print("Encoded Shape:", X.shape)
+            print("Problem Type:", problem_type)
+            print("Target Column:", target_column)
+            print("=" * 50)
     # ==========================
     # Best Model Selection
     # ==========================

@@ -8,7 +8,7 @@ import requests
 
 BACKEND_URL = "http://127.0.0.1:8000"
 
-_TIMEOUT = 120  # seconds — AutoML training can be slow
+_TIMEOUT = 300  # seconds — AutoML training can be slow
 
 
 def upload_dataset(files: dict) -> requests.Response:

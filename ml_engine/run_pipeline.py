@@ -54,45 +54,49 @@ def run_pipeline(file_path):
     # ==========================
     # AutoML Training
     # ==========================
-
+    print("4. Training Started")
     training_results = train_models(
         df,
         target_column,
         problem_type
     )
+    print("5. Training Completed")
 
     # ==========================
     # Charts
     # ==========================
-
+    print("6. Charts Started")
     charts = generate_charts(
     df,
     target_column
     )
-
+    print("6. Charts Completed")
     # ==========================
     # AI Dataset Insight Agent
     # ==========================
-
+    print("8. AI Insights Started")
     ai_insights = generate_ai_insights(
     raw_insights,
     cleaned_insights,
     problem_info,
     training_results
-)
+)   
+    print("9. AI Insights Completed")
 
     # ==========================
     # Model Reasoning Agent
     # ==========================
+    print("12. Model Reasoning Started")
 
     model_reasoning = explain_model_choice(
     problem_info,
     training_results
 )
+    print("13. Model Reasoning Completed")
     # ==========================
     # Analytics Summary Agent
     # ==========================
-
+    print("10. Analytics Started")
     analytics_summary = f"""
     BEFORE CLEANING
 
@@ -119,8 +123,11 @@ def run_pipeline(file_path):
         raw_insights,
         cleaned_insights
     )
-)
+) 
+    print("11. Analytics Completed")
 
+
+    print("14. PDF Started")
     pdf_report = generate_pdf_report({
 
     "raw_insights": raw_insights,
@@ -137,6 +144,8 @@ def run_pipeline(file_path):
 
     "model_reasoning": model_reasoning
 })
+    print("15. PDF Completed")
+
     # ==========================
     # Final Response
     # ==========================

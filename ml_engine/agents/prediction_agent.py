@@ -1,15 +1,11 @@
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-genai.configure(
+client = genai.Client(
     api_key=os.getenv("GEMINI_API_KEY")
-)
-
-model = genai.GenerativeModel(
-    "gemini-2.5-flash"
 )
 
 
@@ -36,15 +32,16 @@ def explain_prediction(
 
     try:
 
-        response = model.generate_content(
-            prompt
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
         )
 
         return response.text
 
-    except Exception:
+    except Exception as e:
 
         return (
-            "Prediction explanation "
-            "temporarily unavailable."
+            f"Prediction explanation unavailable: "
+            f"{str(e)}"
         )

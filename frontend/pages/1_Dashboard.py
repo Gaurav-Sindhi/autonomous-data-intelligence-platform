@@ -313,7 +313,30 @@ scores_df = pd.DataFrame(
 ).sort_values(score_label, ascending=False).reset_index(drop=True)
 
 # Rank column
-scores_df.insert(0, "Rank", ["🥇", "🥈", "🥉"] + [""] * max(0, len(scores_df) - 3))
+rank_emojis = [
+    "🥇",
+    "🥈",
+    "🥉"
+]
+
+rank_column = []
+
+for i in range(len(scores_df)):
+
+    if i < 3:
+        rank_column.append(
+            rank_emojis[i]
+        )
+    else:
+        rank_column.append(
+            str(i + 1)
+        )
+
+scores_df.insert(
+    0,
+    "Rank",
+    rank_column
+)
 
 ml_left, ml_right = st.columns([1, 1], gap="medium")
 

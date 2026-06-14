@@ -1,20 +1,13 @@
-import google.generativeai as genai
-
+from google import genai
 from dotenv import load_dotenv
 import os
-import google.generativeai as genai
 
 load_dotenv()
 
-API_KEY = os.getenv("GEMINI_API_KEY")
-
-genai.configure(
-    api_key=API_KEY
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
 )
 
-model = genai.GenerativeModel(
-    "gemini-flash-latest"
-)
 
 def generate_ai_insights(
     raw_insights,
@@ -51,12 +44,16 @@ def generate_ai_insights(
 
     try:
 
-        response = model.generate_content(
-            prompt
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
         )
 
         return response.text
 
     except Exception as e:
 
-        return f"AI Insight Generation Failed: {str(e)}"
+        return (
+            f"AI Insight Generation Failed: "
+            f"{str(e)}"
+        )
