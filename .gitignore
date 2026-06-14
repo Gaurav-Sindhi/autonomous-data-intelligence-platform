@@ -1,10 +1,67 @@
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Environment
 .env
+.env.*
+
+# Virtual Environment
 venv/
-*.pkl
-*.csv
-*.xlsx
-.DS_Store
-.idea/
+.venv/
+
+# IDE
 .vscode/
+.idea/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Models
+*.pkl
+*.joblib
+
+# Uploaded Data
+uploads/
+data/
+datasets/
+
+# Generated Reports
+reports/
+*.pdf
+
+# Logs
+logs/
+*.log
+
+# Training History
+training_history.json
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Build
+dist/
+build/
+# Generated reports
+uploads/
+uploads/reports/
+
+# Runtime files
+ml_engine/logs/
+ml_engine/models/model_metadata.json
+
+# PDFs
+*.pdf
+
+# Generated images
+*.png
+
+# Test files (optional)
+test_*.py
