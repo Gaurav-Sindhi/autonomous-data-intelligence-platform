@@ -17,30 +17,34 @@ def generate_ai_insights(
 ):
 
     prompt = f"""
-    Original Dataset Statistics:
+Original Dataset Statistics:
+{raw_insights}
 
-    {raw_insights}
+Cleaned Dataset Statistics:
+{cleaned_insights}
 
-    Cleaned Dataset Statistics:
+Problem Information:
+{problem_info}
 
-    {cleaned_insights}
+Training Results:
+{training_results}
 
-    Problem Information:
+Return ONLY:
 
-    {problem_info}
+## Dataset Summary
 
-    Training Results:
+## Cleaning Impact
 
-    {training_results}
+## Important Patterns
 
-    Generate:
+## Model Evaluation
 
-    1. Dataset Summary
-    2. Data Cleaning Impact
-    3. Important Patterns
-    4. Model Evaluation
-    5. Recommendations
-    """
+## Recommendations
+
+Use bullet points.
+
+Maximum 300 words.
+"""
 
     try:
 

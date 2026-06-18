@@ -25,7 +25,7 @@ def predict(data: dict) -> requests.Response:
     return requests.post(
         f"{BACKEND_URL}/predict",
         json=data,
-        timeout=15,
+        timeout=30,
     )
 
 
@@ -33,7 +33,7 @@ def get_history() -> requests.Response:
     """GET the list of past training runs."""
     return requests.get(
         f"{BACKEND_URL}/history",
-        timeout=10,
+        timeout=300,
     )
 
 
@@ -41,5 +41,5 @@ def get_metadata() -> requests.Response:
     """GET model metadata (feature columns, types, etc.)."""
     return requests.get(
         f"{BACKEND_URL}/metadata",
-        timeout=10,
+        timeout=30,
     )

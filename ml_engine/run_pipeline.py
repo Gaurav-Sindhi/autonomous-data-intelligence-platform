@@ -3,7 +3,7 @@ from ml_engine.pipeline.cleaning import clean_data
 from ml_engine.insights.insight_generator import generate_basic_insights
 from ml_engine.pipeline.problem_detector import detect_problem
 from ml_engine.pipeline.model_trainer import train_models
-from ml_engine.reports.pdf_generator import generate_pdf_report
+from ml_engine.reports.new_pdf_generator import generate_professional_pdf
 from ml_engine.visualization.chart_generator import generate_charts
 
 from ml_engine.agents.insight_agent import generate_ai_insights
@@ -128,7 +128,7 @@ def run_pipeline(file_path):
 
 
     print("14. PDF Started")
-    pdf_report = generate_pdf_report({
+    pdf_report = generate_professional_pdf({
 
     "raw_insights": raw_insights,
 

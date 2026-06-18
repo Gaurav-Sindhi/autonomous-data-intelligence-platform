@@ -453,7 +453,7 @@ with dl2:
             st.download_button(
                 label="⬇ Download PDF Report",
                 data=pdf_bytes,
-                file_name="adi_report.pdf",
+                file_name="ADI_report.pdf",
                 mime="application/pdf",
                 use_container_width=True,
             )

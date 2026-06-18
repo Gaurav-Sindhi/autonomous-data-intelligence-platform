@@ -15,15 +15,37 @@ def generate_analytics_insight(
 ):
 
     prompt = f"""
-    Raw Dataset:
-    {raw_insights}
+You are a Senior Data Analyst.
 
-    Cleaned Dataset:
-    {cleaned_insights}
+Raw Dataset Statistics:
+{raw_insights}
 
-    Analyze dataset quality,
-    risks, patterns and recommendations.
-    """
+Cleaned Dataset Statistics:
+{cleaned_insights}
+
+Return ONLY in this format:
+
+## Executive Summary
+- Point 1
+- Point 2
+- Point 3
+
+## Key Findings
+- Point 1
+- Point 2
+- Point 3
+
+## Risks
+- Point 1
+- Point 2
+
+## Recommendations
+- Point 1
+- Point 2
+- Point 3
+
+Maximum 250 words.
+"""
 
     try:
 
