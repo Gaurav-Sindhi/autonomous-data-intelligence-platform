@@ -2,6 +2,13 @@
 
 An AI-powered platform that automatically transforms raw datasets into actionable insights through data cleaning, exploratory data analysis, machine learning, automated reporting, and intelligent predictions.
 
+
+
+[![Watch Demo](https://img.youtube.com/vi/jTDiFqHC8ZE/maxresdefault.jpg)](https://youtu.be/jTDiFqHC8ZE)
+
+## 🎥 Live Demo
+https://youtu.be/jTDiFqHC8ZE
+
 ## 🌟 Overview
 
 Autonomous Data Intelligence (ADI) eliminates the need for manual data preprocessing and model selection by automating the complete machine learning workflow. Users can upload a dataset and instantly receive:
